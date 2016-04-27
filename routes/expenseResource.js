@@ -28,7 +28,9 @@ router.get('/', function(req, res, next) {
       
 	console.log("Find in collections");
 	console.log(docs);
-
+	db.close(function(err){
+		console.log("DB CLosed");
+	});
 	res.send(docs);
 	});
     
@@ -54,21 +56,21 @@ router.get('/', function(req, res, next) {
 	});
 	console.log(dailyExpense);
 	//Save to DB
-	dailyExpense.save(function (err, dailyExpense) {
-  		if (err) {
-  			return console.error(err);
-  		}
-  		console.log(dailyExpense.getValue()+":"+ dailyExpense.getId());
-
-  		db.close(function() {
+	dailyExpense.save(function (err) {
+  		if (err)
+            res.send(err);
+        db.close(function() {
 			console.log("DB closed");
 		});
+
+        res.json({ message: 'Successfully created!' });
+  		
 	});
+	console.log("Done");
 
    }); 
 })
-.delete('/', function(req, res, next) {
-        var ObjectId = require('mongodb').ObjectID;
+.delete('/:id', function(req, res, next) {
 
         var expenseId = req.param('id');
         console.log(expenseId);
@@ -78,11 +80,13 @@ router.get('/', function(req, res, next) {
         console.log("Connected...");
         assert.equal(null, err);
 
-		db.collection('expenses').delete( {"_id":expenseId}, function(err, results) {
+		db.collection('expenses').remove( {"_id":expenseId}, function(err, results) {
 			assert.equal(null, err);
-      		console.log(results);
+      		 if (err)
+                res.send(err);
 
-			res.send(results);
+            db.close();
+            res.json({ message: 'Successfully deleted' });
       	});
    });
 });
