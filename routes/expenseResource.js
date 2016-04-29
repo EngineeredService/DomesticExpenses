@@ -1,90 +1,94 @@
 var express = require('express');
 var router = express.Router();
+var assert = require('assert');
 
 var DailyExpense = require('../model/ExpenseModel.js');
-
-var MongoClient = require('mongodb').MongoClient;
-var assert = require('assert');
-var ObjectId = require('mongodb').ObjectID;
-var url = 'mongodb://localhost:27017/test';
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/test');
 
 router.get('/', function(req, res, next) {
-	
-	var deviceID = req.param('id');
-	console.log(deviceID);
-
-	MongoClient.connect(url, function(err, db) {
-	
-	console.log("Connected...");
-	assert.equal(null, err);
-	
-	// Create a collection we want to drop later
-	var collection = db.collection('expenses');
-	
-	//Peform a simple find and return all the documents
-	collection.find().toArray(function(err, docs) {
-	assert.equal(null, err);
-	//assert.equal(0, docs.length);
-      
-	console.log("Find in collections");
-	console.log(docs);
-
-	res.send(docs);
-	});
     
-	});
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function() {
+        console.log("we're connected!");
+    });
+	
+      DailyExpense.find(function(err, expenses) {
+            if (err)
+                res.send(err);
+
+           
+            res.json(expenses);
+        });
 })
-.post('/', function(req, res, next){
-	var assert = require('assert');
-	var ObjectId = require('mongodb').ObjectID;
+        .get('/:id', function(req, res, next) {
+	
+        console.log(req.params.id);
 
-	MongoClient.connect(url, function(err, db) {
-      
-	assert.equal(null, err);
-	console.log("Connected...");
-
+	 var db = mongoose.connection;
+         db.on('error', console.error.bind(console, 'connection error:'));
+         db.once('open', function() {
+           console.log("we're connected!");
+         });
+	
+        DailyExpense.findById(req.params.id, function(err, expense) {
+            if (err)
+                res.send(err);
+           
+            res.json(expense);
+        });	
+   
+})
+        .post('/', function(req, res, next){
+ 
+                    var db = mongoose.connection;
+            db.on('error', console.error.bind(console, 'connection error:'));
+            db.once('open', function() {
+                console.log("we're connected!");
+            });
+         
 	//DailyExpense Model
+        
+        console.log(req.body);
 
 	var dailyExpense = new DailyExpense({
-		"type": req.body.type,
-		"vendor" :req.body.vendor, 
-		"creator":req.body.creator, 
-		"value":req.body.value, 
-		"creationTime": Date.now()
+            "type": req.body.type,
+            "vendor" :req.body.vendor, 
+            "creator":req.body.creator, 
+            "value":req.body.value,
+            "creationTime": Date.now()
 	});
 	console.log(dailyExpense);
 	//Save to DB
-	dailyExpense.save(function (err, dailyExpense) {
-  		if (err) {
-  			return console.error(err);
-  		}
-  		console.log(dailyExpense.getValue()+":"+ dailyExpense.getId());
-
-  		db.close(function() {
-			console.log("DB closed");
-		});
+	dailyExpense.save(function (err) {
+            if (err)
+                res.send(err);
+          
+            res.json({ message: 'Successfully created!' });
+  		
 	});
+	console.log("Done");
 
-   }); 
 })
-.delete('/', function(req, res, next) {
-        var ObjectId = require('mongodb').ObjectID;
+        .delete('/:id', function(req, res, next) {
 
-        var expenseId = req.param('id');
-        console.log(expenseId);
+                    console.log(req.params.id);
+            var db = mongoose.connection;
+            db.on('error', console.error.bind(console, 'connection error:'));
+            db.once('open', function() {
+                console.log("we're connected!");
+            });
 
-        MongoClient.connect(url, function(err, db) {
+       
+        DailyExpense.remove({_id: req.params.id}, function(err) {
+            if (err)
+                res.send(err);
 
-        console.log("Connected...");
-        assert.equal(null, err);
-
-		db.collection('expenses').delete( {"_id":expenseId}, function(err, results) {
-			assert.equal(null, err);
-      		console.log(results);
-
-			res.send(results);
-      	});
-   });
+               
+            res.json({ message: 'Successfully deleted' });
+        });
+    
 });
 
 module.exports = router;
