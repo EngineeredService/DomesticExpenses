@@ -17,7 +17,6 @@ db.once('open', function() {
 //DailyExpense Model
 
 var dailyExpense = new DailyExpense({
-	"id":"1", 
 	"type":"Food", 
 	"vendor" :"CCD", 
 	"creator":"chitta", 
