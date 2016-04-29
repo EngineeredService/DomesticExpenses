@@ -1,3 +1,8 @@
+/**
+ * 
+ * @type Application Resource
+ * DailyExpenses
+ */
 var express = require('express');
 var router = express.Router();
 var assert = require('assert');
@@ -6,14 +11,19 @@ var DailyExpense = require('../model/ExpenseModel.js');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test');
 
-router.get('/', function(req, res, next) {
-    
-    var db = mongoose.connection;
+var getConnection = function() {
+    var db;
+    if (!db) {
+    db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
         console.log("we're connected!");
     });
-	
+ }
+};  
+router.get('/', function(req, res, next) {
+  
+      getConnection();
       DailyExpense.find(function(err, expenses) {
             if (err)
                 res.send(err);
@@ -23,15 +33,7 @@ router.get('/', function(req, res, next) {
         });
 })
         .get('/:id', function(req, res, next) {
-	
-        console.log(req.params.id);
-
-	 var db = mongoose.connection;
-         db.on('error', console.error.bind(console, 'connection error:'));
-         db.once('open', function() {
-           console.log("we're connected!");
-         });
-	
+	getConnection();	
         DailyExpense.findById(req.params.id, function(err, expense) {
             if (err)
                 res.send(err);
@@ -41,17 +43,7 @@ router.get('/', function(req, res, next) {
    
 })
         .post('/', function(req, res, next){
- 
-                    var db = mongoose.connection;
-            db.on('error', console.error.bind(console, 'connection error:'));
-            db.once('open', function() {
-                console.log("we're connected!");
-            });
-         
-	//DailyExpense Model
-        
-        console.log(req.body);
-
+        getConnection();
 	var dailyExpense = new DailyExpense({
             "type": req.body.type,
             "vendor" :req.body.vendor, 
@@ -59,8 +51,8 @@ router.get('/', function(req, res, next) {
             "value":req.body.value,
             "creationTime": Date.now()
 	});
-	console.log(dailyExpense);
-	//Save to DB
+
+        //Save to DB
 	dailyExpense.save(function (err) {
             if (err)
                 res.send(err);
@@ -72,15 +64,8 @@ router.get('/', function(req, res, next) {
 
 })
         .delete('/:id', function(req, res, next) {
-
-                    console.log(req.params.id);
-            var db = mongoose.connection;
-            db.on('error', console.error.bind(console, 'connection error:'));
-            db.once('open', function() {
-                console.log("we're connected!");
-            });
-
-       
+                
+        getConnection();
         DailyExpense.remove({_id: req.params.id}, function(err) {
             if (err)
                 res.send(err);
