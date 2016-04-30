@@ -1,19 +1,30 @@
-<html>
-<title>Welcome to Enterprise</title>
+<!DOCTYPE html>
+<html ng-app="App">
+<head>
+    <meta charset="utf-8" />
+    <title>Login</title>
+    <link rel="stylesheet" href="stylesheets/bootstrap.min.css" />
+    <link href="stylesheets/style.css" rel="stylesheet" />
+</head>
 <body>
-<p>Expenditure Tracking</p>
-<form action="/login" method="post">
-    <div>
-        <label>Username:</label>
-        <input type="text" name="username"/>
+
+    <div class="jumbotron">
+          <div class="container">
+            <div class="col-sm-8 col-sm-offset-2">
+             <div ng-view></div>
+<span>{{2+3}}</span>            </div>
+        </div>
     </div>
-    <div>
-        <label>Password:</label>
-        <input type="password" name="password"/>
-    </div>
-    <div>
-        <input type="submit" value="Log In"/>
-    </div>
-</form>
+
+
+    <script src="libs/jquery-2.2.3.min.js"></script>
+    <script src="/libs/angular.js"></script>
+    <script src="/libs/angular-route.js"></script>
+    <script src="javascript/app.js"></script>
+    <script src="javascript/app-services/authentication.service.js"></script>
+    <script src="javascript/app-services/user.service.js"></script>
+    <script src="login/login.controller.js"></script>
+
+
 </body>
 </html>
