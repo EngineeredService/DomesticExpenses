@@ -34,9 +34,10 @@
 
             /* Use this for real authentication
              ----------------------------------------------*/
-            $http.post('10.191.213.168:3000/login', { userId: username, password: password })
+            $http.post('http://localhost:3000/login', { userId: username, password: password })
                 .success(function (response) {
-                  callback(response);
+                  alert(response.message);
+                  callback(responsee);
                 });
 
         }
