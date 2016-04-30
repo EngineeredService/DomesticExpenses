@@ -1,4 +1,7 @@
-
+/**
+ * 
+ * @type Model ExpensesSchema
+ */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -13,11 +16,11 @@ var expenseSchema = new Schema({
 
 expenseSchema.methods.getId = function(){
 	return this._id;
-}
+};
 
 expenseSchema.methods.getValue = function(){
 	return this.value;
-}
+};
 
 var Expense = mongoose.model('Expense', expenseSchema);
 
