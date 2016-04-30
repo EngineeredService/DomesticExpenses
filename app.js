@@ -1,4 +1,5 @@
 var express = require('express');
+var passport = require('passport');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -7,9 +8,8 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var expenses = require('./routes/expenseResource');
-var login = require('./routes/login');
 var server = require('./routes/server');
-var user = require('./routes/');
+var user = require('./routes/userResource');
 
 var app = express();
 
@@ -28,6 +28,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', server);
 app.use('/users', user);
 app.use('/expenses', expenses);
+
+// Use the body-parser package in our application
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+// Use the passport package in our application
+app.use(passport.initialize());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

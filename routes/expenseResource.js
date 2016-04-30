@@ -8,22 +8,9 @@ var router = express.Router();
 var assert = require('assert');
 
 var DailyExpense = require('../model/ExpenseModel.js');
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
 
-var getConnection = function() {
-    var db;
-    if (!db) {
-    db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function() {
-        console.log("we're connected!");
-    });
- }
-};  
 router.get('/', function(req, res, next) {
   
-      getConnection();
       DailyExpense.find(function(err, expenses) {
             if (err)
                 res.send(err);
@@ -33,7 +20,6 @@ router.get('/', function(req, res, next) {
         });
 })
         .get('/:id', function(req, res, next) {
-	getConnection();	
         DailyExpense.findById(req.params.id, function(err, expense) {
             if (err)
                 res.send(err);
@@ -43,7 +29,6 @@ router.get('/', function(req, res, next) {
    
 })
         .post('/', function(req, res, next){
-        getConnection();
 	var dailyExpense = new DailyExpense({
             "type": req.body.type,
             "vendor" :req.body.vendor, 
@@ -60,12 +45,10 @@ router.get('/', function(req, res, next) {
             res.json({ message: 'Successfully created!' });
   		
 	});
-	console.log("Done");
 
 })
         .delete('/:id', function(req, res, next) {
                 
-        getConnection();
         DailyExpense.remove({_id: req.params.id}, function(err) {
             if (err)
                 res.send(err);

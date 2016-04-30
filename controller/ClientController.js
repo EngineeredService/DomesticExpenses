@@ -5,6 +5,7 @@
  */
 // Load required packages
 var Client = require('../model/Client');
+var exports = module.exports = {};
 
 // Create endpoint /api/client for POST
 exports.postClients = function(req, res) {
@@ -22,14 +23,14 @@ exports.postClients = function(req, res) {
     if (err)
       res.send(err);
 
-    res.json({ message: 'Client added to the locker!', data: client });
+    res.json({ message: 'Client added ...', data: client });
   });
 };
 
 // Create endpoint /api/clients for GET
 exports.getClients = function(req, res) {
   // Use the Client model to find all clients
-  Client.find({ userId: req.user._id }, function(err, clients) {
+  Client.find(function(err, clients) {
     if (err)
       res.send(err);
 
@@ -37,4 +38,14 @@ exports.getClients = function(req, res) {
   });
 };
 
+//Create Endpoint /api/client/{client-id} GET
+exports.getClient = function(req, res) {
+  // Use the Client
+  Client.findById(req.params.client_id, function(err, client) {
+    if (err)
+      res.send(err);
+
+    res.json(client);
+   });
+};
 

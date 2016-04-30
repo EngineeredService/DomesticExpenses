@@ -8,10 +8,18 @@ var userController = require('../controller/UserController');
 var express = require('express');
 var router = express.Router();
 
-// Create endpoint handlers for /clients
-router.route('/clients')
-  .post(userController.postClients)
-  .get(userController.getClients);
+// Create endpoint handlers for users
+router.route('/')
+  .post(userController.postUsers)
+  .get(userController.getUsers);
+  
+router.route('/:user_id')
+    .get(userController.getUser)
+    .put(userController.putUser)
+    .delete(userController.deleteUser);
+  
+module.exports = router;
+
 
 
 
