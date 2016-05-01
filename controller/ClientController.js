@@ -8,7 +8,7 @@ var Client = require('../model/Client');
 var exports = module.exports = {};
 
 // Create endpoint /api/client for POST
-exports.postClients = function(req, res) {
+exports.postClients = function(req, res, callback) {
   // Create a new instance of the Client model
   var client = new Client();
 
@@ -21,29 +21,29 @@ exports.postClients = function(req, res) {
   // Save the client and check for errors
   client.save(function(err) {
     if (err)
-      res.send(err);
+      return callback();
 
     res.json({ message: 'Client added ...', data: client });
   });
 };
 
 // Create endpoint /api/clients for GET
-exports.getClients = function(req, res) {
+exports.getClients = function(req, res, callback) {
   // Use the Client model to find all clients
   Client.find(function(err, clients) {
     if (err)
-      res.send(err);
+      return callback();
 
     res.json(clients);
   });
 };
 
 //Create Endpoint /api/client/{client-id} GET
-exports.getClient = function(req, res) {
+exports.getClient = function(req, res, callback) {
   // Use the Client
   Client.findById(req.params.client_id, function(err, client) {
     if (err)
-      res.send(err);
+      return callback();
 
     res.json(client);
    });
