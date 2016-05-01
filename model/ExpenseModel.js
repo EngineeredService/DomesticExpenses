@@ -7,11 +7,12 @@ var Schema = mongoose.Schema;
 
 //DailyExpense schema
 var expenseSchema = new Schema({
-    type:String,
-    vendor:String,
-    creator:String,
-    value:Number,
-    creationTime:Number	
+    type:{type:String, required:true},
+    vendor:{type:String, required:true},
+    creator:{type:String, required:true},
+    value:{type:Number,required:true},
+    creationTime:{type:Number, required:false},
+    updatedTime:{type:Number, required:false}
 });
 
 expenseSchema.methods.getId = function(){
