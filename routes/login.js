@@ -34,7 +34,10 @@ router.post('/', function(req, res, callback) {
         }
 
         // Success
-        res.json({"message":"Successfully logged in"});
+        res.json({
+            "message":"Successfully logged in",
+            "success":true
+        });
       });
    });
   }
