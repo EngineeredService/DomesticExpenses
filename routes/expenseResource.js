@@ -7,14 +7,13 @@ var express = require('express');
 var router = express.Router();
 var assert = require('assert');
 
-var DailyExpense = require('../model/ExpenseModel.js');
+var DailyExpense = require('../model/ExpenseModel');
 
 router.get('/', function(req, res, next) {
   
       DailyExpense.find(function(err, expenses) {
             if (err)
-                res.send(err);
-
+                return next();
            
             res.json(expenses);
         });
@@ -22,7 +21,7 @@ router.get('/', function(req, res, next) {
         .get('/:id', function(req, res, next) {
         DailyExpense.findById(req.params.id, function(err, expense) {
             if (err)
-                res.send(err);
+               return next();
            
             res.json(expense);
         });	
@@ -40,7 +39,7 @@ router.get('/', function(req, res, next) {
         //Save to DB
 	dailyExpense.save(function (err) {
             if (err)
-                res.send(err);
+                return next();
           
             res.json({ message: 'Successfully created!' });
   		
@@ -51,7 +50,7 @@ router.get('/', function(req, res, next) {
                 
         DailyExpense.remove({_id: req.params.id}, function(err) {
             if (err)
-                res.send(err);
+                return next();
 
                
             res.json({ message: 'Successfully deleted' });

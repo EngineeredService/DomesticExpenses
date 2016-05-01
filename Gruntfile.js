@@ -5,7 +5,23 @@
  */
 
 module.exports = function(grunt){
+        
 	grunt.initConfig({
+            
+            shell: {
+                mongodb: {
+                    command: 'mongod --dbpath ./data/db',
+            options: {
+            async: true,
+            stdout: false,
+            stderr: true,
+            failOnError: true,
+            execOptions: {
+                cwd: '.'
+                 }
+                }
+               }
+              },
 		pkg:grunt.file.readJSON('package.json'),
 
 		watch:{
@@ -25,6 +41,7 @@ module.exports = function(grunt){
   		}
 	});
 
+        
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-express');	
 	grunt.registerTask('server',['express','watch']);

@@ -9,34 +9,35 @@ var assert = require('assert');
 var User = require('../model/UserModel');
 
 router.post('/', function(req, res, callback) {
-  console.log(req);
   if (req.body && req.body.userId){
     var username = req.body.userId;
     var password = req.body.password;
     User.findOne({ userId: username }, function (err, user) {
-     console.log(user);
      //error
      if (err) { 
-          res.send(err);
+          return callback(err);
      }
      //No such user
      if (!user) { 
-          res.send(err);
+          return callback(err);
      }
      
      // Make sure the password is correct
       user.verifyPassword(password, function(err, isMatch) {
         if (err) { 
-            res.send(err);
+            return callback(err);
         }
 
         // Password did not match
         if (!isMatch) { 
-            res.json({"error":"Wrong Password"});
+            return callback(err);
         }
 
         // Success
-        res.json({"message":"Successfully logged in"});
+        res.json({
+            "message":"Successfully logged in",
+            "success":true
+        });
       });
    });
   }

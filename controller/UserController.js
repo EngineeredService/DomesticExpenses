@@ -8,57 +8,52 @@ var User = require('../model/UserModel');
 var exports = module.exports = {};
 var connection = require('./MongooseConnection');
 // Create endpoint /api/client for POST
-exports.postUsers = function(req, res) {
+exports.postUsers = function(req, res, callback) {
 
-  console.log(req);
   // Create a new instance of the Client model
   var user = new User();
 
   // Set the client properties that came from the POST data
-  if (req && req.body) {
-   user.name = req.body.name;
-   user.userId = req.body.userId;
-   user.password = req.body.password;
-  }
+  user.name = req.body.name;
+  user.userId = req.body.userId;
+  user.password = req.body.password; 
   
-  console.log(user);
-
   // Save the client and check for errors
   user.save(function(err) {
     if (err)
-      res.send(err);
-
+      return callback(err);
+  
     res.json({ message: 'User added ...', data: user });
   });
   
 };
 
 // Create endpoint /api/clients for GET
-exports.getUsers = function(req, res) {
+exports.getUsers = function(req, res, callback) {
   // Use the Client model to find all clients
   User.find( function(err, clients) {
     if (err)
-      res.send(err);
+      return callback(err);
 
     res.json(clients);
   });
 };
 
-exports.getUser = function(req, res){
+exports.getUser = function(req, res, callback){
     // Use the Beer model to find a specific user
     User.findById(req.params.user_id, function(err, user) {
     if (err)
-      res.send(err);
+      return callback(err);
 
     res.json(user);
   });
 };
 //endpoint PUT
-exports.putUser = function(req, res) {
+exports.putUser = function(req, res, callback) {
     // Use the User model to find a specific user
     User.findById(req.params.user_id, function(err, user) {
     if (err)
-      res.send(err);
+      return callback(err);
 
     // Update User information
     if (req && req.body){
@@ -69,7 +64,7 @@ exports.putUser = function(req, res) {
     // Save the user and check for errors
     user.save(function(err) {
       if (err)
-        res.send(err);
+        return callback(err);
 
       res.json(user);
     });
@@ -77,11 +72,11 @@ exports.putUser = function(req, res) {
 };
 
 //endpoint DELETE
-exports.deleteUser = function(req, res) {
+exports.deleteUser = function(req, res, callback) {
     // Use the User model to find a specific user and remove it
     User.findByIdAndRemove(req.params.user_id, function(err) {
     if (err)
-      res.send(err);
+      return callback(err);
 
     res.json({ message: 'User removed ..!' });
   });
