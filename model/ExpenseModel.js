@@ -22,6 +22,15 @@ expenseSchema.methods.getValue = function(){
 	return this.value;
 };
 
+expenseSchema.methods.getCreator = function() {
+    return this.creator;
+};
+
+expenseSchema.methods.getVendor = function() {
+    return this.vendor;
+};
+
+
 var Expense = mongoose.model('Expense', expenseSchema);
 
 
