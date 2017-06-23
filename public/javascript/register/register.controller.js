@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     'use strict';
 
     angular
@@ -9,9 +9,7 @@
     function RegisterController(UserService, $location, $rootScope, FlashService) {
         var vm = this;
 
-        vm.register = register;
-
-        function register() {
+        vm.register = function() {
             vm.dataLoading = true;
             UserService.Create(vm.user)
                 .then(function (response) {
@@ -23,7 +21,7 @@
                         vm.dataLoading = false;
                     }
                 });
-        }
+        };
     }
 
 })();
